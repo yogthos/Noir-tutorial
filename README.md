@@ -1,4 +1,17 @@
-Noir-tutorial
-=============
+# my-website
 
-the project for my Noir tutorial http://yogthos.net/blog/22-Noir+tutorial+-+part+1
+A website written in noir. 
+
+## Usage
+
+```bash
+lein deps
+lein run
+```
+
+## License
+
+Copyright (C) 2011 FIXME
+
+Distributed under the Eclipse Public License, the same as Clojure.
+
