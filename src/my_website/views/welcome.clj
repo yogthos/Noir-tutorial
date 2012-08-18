@@ -1,8 +1,11 @@
 (ns my-website.views.welcome
-  (:require [my-website.views.common :as common]
-            [noir.content.getting-started])
+  (:require [my-website.views.common :as common])
   (:use [noir.core :only [defpage]]
         hiccup.core hiccup.form))
+
+(defpage "/" []
+  (common/layout 
+    ))
 
 (defpage "/welcome" {:keys [greeting]}
   (common/layout
