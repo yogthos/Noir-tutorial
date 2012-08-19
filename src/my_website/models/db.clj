@@ -7,7 +7,8 @@
    :user "admin"
    :password "admin"})
 
-#_ (try
+(defn init-db []
+  (try
   (sql/with-connection
     db
     (sql/create-table
@@ -16,7 +17,7 @@
       [:handle "varchar(100)"]
       [:pass   "varchar(100)"]))
   (catch Exception ex
-    (.getMessage (.getNextException ex))))
+    (.getMessage (.getNextException ex)))))
 
 (defn db-read
   "returns the result of running the supplied SQL query"
