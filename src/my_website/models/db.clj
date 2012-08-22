@@ -45,9 +45,6 @@
 (defn get-user [handle]
   (first (db-read "select * from users where handle=?" handle)))
 
-(defn fix-file-name [filename]
-  (.replaceAll filename "[^a-zA-Z0-9-\\.]" ""))
-
 (defn to-byte-array [f]  
   (with-open [input  (new java.io.FileInputStream f) 
               buffer (new java.io.ByteArrayOutputStream)]
@@ -69,6 +66,3 @@
 
 (defn get-file [name]
   (first (db-read "select * from file where name=?" name)))
-
-(defn delete-file [name]  
-  (sql/with-connection db (sql/delete-rows :file ["name=?" name])))
