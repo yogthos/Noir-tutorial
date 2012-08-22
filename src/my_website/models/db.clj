@@ -1,5 +1,7 @@
 (ns my-website.models.db
-  (:require [clojure.java.jdbc :as sql]))
+  (:require [clojure.java.jdbc :as sql]
+            [clojure.string :as string]
+            [clojure.java.io :as io]))
 
 (def db 
   {:subprotocol "postgresql"
@@ -19,6 +21,15 @@
   (catch Exception ex
     (.getMessage (.getNextException ex)))))
 
+(defn create-file-table []
+  (sql/with-connection 
+    db
+    (sql/create-table
+      :file
+      [:type "varchar(50)"]
+      [:name "varchar(50)"]
+      [:data "bytea"])))
+
 (defn db-read
   "returns the result of running the supplied SQL query"
   [query & args]
@@ -34,4 +45,30 @@
 (defn get-user [handle]
   (first (db-read "select * from users where handle=?" handle)))
 
+(defn fix-file-name [filename]
+  (.replaceAll filename "[^a-zA-Z0-9-\\.]" ""))
 
+(defn to-byte-array [f]  
+  (with-open [input  (new java.io.FileInputStream f) 
+              buffer (new java.io.ByteArrayOutputStream)]
+    (clojure.java.io/copy input buffer)
+    (.toByteArray buffer)))
+
+(defn store-file [{:keys [tempfile filename content-type]}]
+  (sql/with-connection 
+    db
+    (sql/update-or-insert-values
+      :file
+      ["name=?" filename]
+      {:type content-type 
+       :name filename ;;needs to be cleaned up when served as url 
+       :data (to-byte-array tempfile)})))
+
+(defn list-files []
+  (map :name (db-read "select name from file")))
+
+(defn get-file [name]
+  (first (db-read "select * from file where name=?" name)))
+
+(defn delete-file [name]  
+  (sql/with-connection db (sql/delete-rows :file ["name=?" name])))
