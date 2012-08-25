@@ -4,8 +4,7 @@
         hiccup.core hiccup.form))
 
 (defpage "/" []
-  (common/layout 
-    ))
+  (common/layout))
 
 (defpage "/welcome" {:keys [greeting]}
   (common/layout

@@ -51,7 +51,19 @@ blockquote, q { quotes: "" ""; }
 
 a img { border: none; }
 
-/*:focus { outline: 0; }*/
-
-
+.menu ul {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+.menu li {
+    float: right;
+    position: relative;
+    margin-right: 20px;
+}
+label {
+    margin-left: 10px;
+	width:120px; 
+    float:left;
+}
 

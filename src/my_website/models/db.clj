@@ -30,6 +30,10 @@
       [:name "varchar(50)"]
       [:data "bytea"])))
 
+(defn get-user [handle]
+  (sql/with-connection db
+    (sql/with-query-results rs ["select * from users where handle=?" handle] (first rs))))
+
 (defn db-read
   "returns the result of running the supplied SQL query"
   [query & args]
@@ -61,8 +65,21 @@
        :name filename ;;needs to be cleaned up when served as url 
        :data (to-byte-array tempfile)})))
 
-(defn list-files []
-  (map :name (db-read "select name from file")))
+(defn params-query [params]
+  (apply str (interpose ", " (repeat (count params) "?"))))
+
+(defn list-files [& [types]]
+  (map :name 
+       (if types
+         (apply (partial db-read (str "select name from file where type in (" (params-query types) ")")) types)
+         (db-read "select name from file"))))
 
 (defn get-file [name]
   (first (db-read "select * from file where name=?" name)))
+
+(defn delete-file [name]  
+  (sql/with-connection db (sql/delete-rows :file ["name=?" name])))
+
+(defn file-types []
+  (map :type (db-read "select distinct type from file")))
+
