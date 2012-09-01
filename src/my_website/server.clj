@@ -1,5 +1,5 @@
 (ns my-website.server
-  (:require [noir.server :as server])
+  (:require [noir.server :as server])     
   (:gen-class))
 
 (server/load-views "src/my_website/views/")

@@ -66,4 +66,8 @@ label {
 	width:120px; 
     float:left;
 }
-
+#hits-by-time {
+	margin: 25px;
+	width: 400px;
+	height: 400px;
+}

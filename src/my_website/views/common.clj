@@ -2,7 +2,7 @@
   (:use [noir.core :only [defpartial]]
         hiccup.element 
         hiccup.form
-        [hiccup.page :only [include-css html5]])
+        [hiccup.page :only [include-css include-js html5]])
   (:require [noir.session :as session]))
 
 (defmacro private-page [path params & content]
@@ -28,7 +28,9 @@
   (html5
     [:head
      [:title "my-website"]
-     (include-css "/css/reset.css")]
+     (include-css "/css/reset.css")
+     (include-js "http://code.jquery.com/jquery-1.7.2.min.js"
+                 "/js/jquery.flot.min.js")]
     [:body content]))
 
 (defpartial layout [& content]  
