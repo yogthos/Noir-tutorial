@@ -3,6 +3,8 @@
             :dependencies [[org.clojure/clojure "1.4.0"]
                            [noir "1.3.0-beta3"]
                            [org.clojure/java.jdbc "0.2.3"]
-                           [postgresql/postgresql "9.1-901.jdbc4"]]               
+                           [postgresql/postgresql "9.1-901.jdbc4"]]
+            :dev-dependencies [[lein-ring "0.7.3"]]
+            :ring {:handler my-website.server/handler}
             :main my-website.server)
 
