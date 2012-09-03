@@ -3,7 +3,7 @@
             [noir.request :as request]
             [noir.response :as response])
   (:use clojure.java.io hiccup.page hiccup.form noir.core)
-  (:import java.text.SimpleDateFormat))
+  (:import java.text.SimpleDateFormat java.io.File))
 
 
 (defn round-ms-down-to-nearest-sec [date]
@@ -30,9 +30,17 @@
     (map (fn [[t hits]] [t (count hits)]))
     (sort-by first)))
 
-(defpage [:post "/get-logs"] params
-  (println (.getAbsolutePath (new java.io.File ".")))
-  (response/json (hits-per-second (read-logs "test-log.txt"))))
+(defn last-log [path] 
+  (->> path
+    (new File)
+    (.listFiles)    
+    (filter #(.startsWith (.getName %) "localhost_access_log") )
+    (sort-by (memfn lastModified))
+    (map (memfn getName))
+    (last)))
+
+(defpage [:post "/get-logs"] params  
+  (response/json (hits-per-second (read-logs (str "logs/" (last-log "logs/"))))))
 
 (defpage "/access-chart" []
   (common/basic-layout
@@ -40,10 +48,4 @@
     (hidden-field "context" (:context (request/ring-request)))
     [:div#hits-by-time "loading..."]))
 
-(import java.io.File)
-(defn list-files [path] 
-  (->> path
-    (new File)
-    (.listFiles)
-    (sort-by (memfn lastModified))
-    (map (memfn getName))))
+
