@@ -1,7 +1,7 @@
 (ns my-website.config
   (:use clojure.java.io))
 
-(def config-file "config")
+(def config-file "site.config")
 (def app-config (atom nil))
 
 (defn load-config-file []
