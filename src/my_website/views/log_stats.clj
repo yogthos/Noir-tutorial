@@ -2,7 +2,7 @@
   (:require [my-website.views.common :as common]
             [noir.request :as request]
             [noir.response :as response])
-  (:use clojure.java.io hiccup.page hiccup.form noir.core)
+  (:use clojure.java.io hiccup.page hiccup.form noir.core my-website.config)
   (:import java.text.SimpleDateFormat java.io.File))
 
 
@@ -37,10 +37,13 @@
     (filter #(.startsWith (.getName %) "localhost_access_log") )
     (sort-by (memfn lastModified))
     (map (memfn getName))
-    (last)))
+    (last)
+    (str path)))
 
 (defpage [:post "/get-logs"] params  
-  (response/json (hits-per-second (read-logs (str "logs/" (last-log "logs/"))))))
+  (response/json 
+    (hits-per-second 
+      (read-logs (last-log (:log-path @app-config))))))
 
 (defpage "/access-chart" []
   (common/basic-layout

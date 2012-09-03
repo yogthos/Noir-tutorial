@@ -42,7 +42,7 @@
   (if (valid? user)
     (try 
       (db/add-user (update-in (dissoc user :pass1) [:pass] crypt/encrypt))
-      (resp/redirect "/")
+      (common/local-redirect "/")
       (catch Exception ex
         (render "/signup" (assoc user :error (.getMessage ex)))))
     (render "/signup" user)))
@@ -51,9 +51,9 @@
   (let [user (db/get-user handle)] 
     (if (and user (crypt/compare pass (:pass user)))           
       (do (session/put! :user handle)
-        (resp/redirect "/"))
+        (common/local-redirect "/"))
       (render "/" {:handle handle :error "login failed"}))))
 
 (defpage [:post "/logout"] []
   (session/clear!)
-  (resp/redirect "/"))
+  (common/local-redirect "/"))

@@ -5,11 +5,16 @@
         [hiccup.page :only [include-css include-js html5]])
   (:require [noir.session :as session]))
 
+(defmacro local-redirect [url]
+  `(noir.response/redirect 
+     (if-let [context# (:context (noir.request/ring-request))]
+       (str context# ~url) ~url)))
+
 (defmacro private-page [path params & content]
   `(noir.core/defpage 
      ~path 
      ~params 
-     (if (session/get :user) (do ~@content) (resp/redirect "/"))))
+     (if (session/get :user) (do ~@content) (local-redirect "/"))))
 
 (defn login-form []
   (form-to [:post "/login"]           
