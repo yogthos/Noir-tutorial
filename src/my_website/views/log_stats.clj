@@ -1,7 +1,8 @@
 (ns my-website.views.log-stats
-  (:require [my-website.views.common :as common] 
+  (:require [my-website.views.common :as common]
+            [noir.request :as request]
             [noir.response :as response])
-  (:use clojure.java.io hiccup.page noir.core)
+  (:use clojure.java.io hiccup.page hiccup.form noir.core)
   (:import java.text.SimpleDateFormat))
 
 
@@ -30,11 +31,13 @@
     (sort-by first)))
 
 (defpage [:post "/get-logs"] params
+  (println (.getAbsolutePath (new java.io.File ".")))
   (response/json (hits-per-second (read-logs "test-log.txt"))))
 
 (defpage "/access-chart" []
   (common/basic-layout
     (include-js "/js/site.js")
+    (hidden-field "context" (:context (request/ring-request)))
     [:div#hits-by-time "loading..."]))
 
 (import java.io.File)
