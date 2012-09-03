@@ -13,13 +13,13 @@
             (.. url 
               getPath 
               (endsWith (str "jar!/" config-file))))
-      (doto (new java.io.File "config") 
+      (doto (new java.io.File config-file) 
         (.createNewFile))
       url)))
 
 (defn init-config []
   (with-open
     [r (java.io.PushbackReader. (reader (load-config-file)))]
-    (if-let [config (read r nil nil)]
+    (if-let [config (read r nil nil)]      
       (reset! app-config config)))
   (println "servlet has been initialized"))
