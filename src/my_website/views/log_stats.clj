@@ -25,7 +25,7 @@
 (defn hits-per-second [logs]
   (->> logs 
     (group-by :ip)
-    (mapcat second)    
+    (map #(first (second %)))    
     (group-by :access-time)    
     (map (fn [[t hits]] [t (count hits)]))
     (sort-by first)))
