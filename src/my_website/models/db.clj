@@ -30,10 +30,6 @@
       [:name "varchar(50)"]
       [:data "bytea"])))
 
-(defn get-user [handle]
-  (sql/with-connection db
-    (sql/with-query-results rs ["select * from users where handle=?" handle] (first rs))))
-
 (defn db-read
   "returns the result of running the supplied SQL query"
   [query & args]
